@@ -1,0 +1,111 @@
+# ---------------------------------------------
+# Git – minimalistický cheatsheet (git.txt)
+# ---------------------------------------------
+# ak vyskakuje ze sa heslom neda prihlasit
+# vytvorte si PAT na https://github.com/settings/tokens
+# Tokens (classic)
+# potom pri pokuse o push napriklad tak dajte heslo co mate na githube a copy pastnite PAT kluc
+# 1) Jednorazová konfigurácia (meno, email, hlavná vetva = main)
+git config --global user.name  "Tvoje Meno"
+git config --global user.email "tvoje@meno.dev"
+git config --global init.defaultBranch main
+git config --global color.ui auto
+
+# 2) Nový projekt
+git init
+echo "/build/" >> .gitignore
+git add .
+git commit -m "init: prvý commit"
+
+# 3) Klonovanie existujúceho repa
+git clone https://github.com/owner/repo.git
+cd repo
+
+# 4) Stav, rozdiely, história
+git status
+git diff                 # rozdiely v pracovnom adresári
+git diff --staged        # rozdiely v stage (indexe)
+git log --oneline --graph --decorate --all
+
+# 5) Pridanie a commit
+git add <súbor>          # alebo: git add -A  (všetko)
+git commit -m "msg"
+git commit -am "msg"     # rýchlo: pridá a commitne IBA sledované súbory
+
+# 6) Vetvy (branches)
+git branch               # vypísať lokálne vetvy
+git switch -c feat/nieco # vytvoriť a prepnúť na novú vetvu
+git switch main          # prepnúť späť
+# (alternatíva: git checkout -b feat/nieco, git checkout main)
+
+# 7) Remote a push/pull
+git remote -v
+git remote add origin https://github.com/owner/repo.git
+git push -u origin main          # prvý push a nastavenie trackovania
+git pull --rebase                 # stiahni zmeny a preusporiadaj commity nad nimi
+git fetch                         # stiahni referencie bez merge/rebase
+
+# 8) Merge vs. Rebase (základ)
+# Merge (na vetve main zlúč feature):
+git switch main
+git pull --rebase
+git merge feat/nieco
+# Rebase (na vetve feat/nieco dorovnaj voči main):
+git switch feat/nieco
+git fetch origin
+git rebase origin/main
+# Konflikt? oprav súbory -> git add <súbory> -> git rebase --continue
+# Zrušiť: git merge --abort  |  git rebase --abort
+
+# 9) Stash (odloženie rozrobených zmien)
+git stash push -m "rozrobené"
+git stash list
+git stash pop        # aplikuj a odstráň zo stash
+git stash drop       # odstráň konkrétnu položku zo stash
+
+# 10) Tagy
+git tag v1.0.0                             # lightweight tag
+git tag -a v1.0.0 -m "release 1.0.0"       # anotovaný tag
+git push --tags
+
+# 11) Undo / návraty (opatrne!)
+git restore <súbor>             # vráť zmeny v pracovnom adresári
+git restore --staged <súbor>    # vyhoď zo stagingu
+git reset --soft HEAD~1         # zruš posledný commit, nechaj zmeny v stagingu
+git reset --mixed HEAD~1        # zruš commit, zmeny nechaj v pracovnom adresári
+git reset --hard HEAD~1         # ZMAŽ posledný commit aj zmeny (opatrne!)
+git revert <commit>             # vytvor „anti-commit“ (bez prepísania histórie)
+git clean -fd                   # vymaž ne-trackované súbory/priečinky (opatrne!)
+
+# 12) .gitignore – mini príklady
+# Komentár: #
+/build/
+*.log
+*.tmp
+!.keep                 # negácia: tento súbor ponechaj, aj keď inak by sa ignoroval
+
+# 13) Rýchly workflow – nová featura
+git switch -c feat/meno
+# ... úpravy kódu ...
+git add -A
+git commit -m "feat: opis"
+git push -u origin HEAD
+
+# 14) Rýchly workflow – dorovnanie feature na aktuálny main
+git fetch origin
+git switch main
+git pull --rebase
+git switch feat/meno
+git rebase origin/main
+# ... vyrieš konflikty ...
+git push --force-with-lease     # bezpečnejšie ako --force
+
+# 15) Pojmy (minislovník)
+# working directory = tvoj priečinok s kódom
+# index/stage       = „prípravka“: čo pôjde do najbližšieho commit-u
+# HEAD              = referenca na aktuálny commit (vrchol vetvy)
+
+# Tipy bezpečnosti
+# - Na hlavné vetvy (main/master) nikdy nepoužívaj obyčajný --force.
+# - Preferuj: git push --force-with-lease (chráni zmeny iných).
+# - Commity rob malé a zrozumiteľné, správy v imperatíve (napr. "add X", "fix Y").

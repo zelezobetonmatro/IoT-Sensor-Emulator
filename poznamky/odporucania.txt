@@ -1,0 +1,28 @@
+OS: Linux
+
+Nástroje: gcc, make, curl
+
+Porty: board=9001, processor=9002, web=9003 // mozte aj inac ak zistite ako
+
+Špecifikácia templatu senzora:
+Každý sensor_*.c exportuje jednu štruktúru s metadátami + funkciami (alebo ekvivalent, ktorý ste si už odsúhlasili). Minimálne:
+
+name (napr. "temp0"), type (temp/humid/…),
+
+init(), sample(now,&value,&ts), volané raz za sekundu,
+
+shutdown() (nepovinné).
+Board všetky .so v modules/ načíta cez dlopen() a volá sample().
+
+test curly
+# Board
+curl http://localhost:9001/api/v1/sensors
+curl "http://localhost:9001/api/v1/window?name=temp0"
+
+# Processor
+curl http://localhost:9002/api/v1/summary
+
+# Web (otvor v prehliadači)
+http://localhost:9003/
+
+odporucam pouzivat Common utils provided, ak ne implementujte si vlastne

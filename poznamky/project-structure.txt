@@ -1,0 +1,30 @@
+weather-app/
+  common/              # Spoločné hlavičky (už dostanete pripravené)
+    http.h
+    json.h
+    ringbuf.h
+    proto.h
+    timeutil.h
+    sensor_if.h
+  sensors_src/         # Každý senzor má vlastný .c súbor (plugin-based)
+    template_sensor.c
+    sensor_temp.c
+    sensor_humid.c
+    sensor_press.c
+    sensor_wind.c
+  modules/             # Sem sa kompilujú .so moduly (sensor_*.so)
+  board/               # “Doska” – načítava senzory z ./modules (plugin-based nacitavanie)
+    board.c
+    main.c
+  processor/           # Spracovanie dát
+    processor.c
+    main.c
+  web/                 # HTTP server + jednoduchá HTML stránka
+    static/
+      index.html
+      app.js
+      styles.css
+    web.c
+    main.c
+  build/Makefile       # nakoniec
+  README.md
