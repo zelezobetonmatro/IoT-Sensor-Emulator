@@ -1,4 +1,5 @@
 #Flow projektu
+
 #TCP styl komunikacie potrebny nakolko potrebujeme mat istotu ze data prisli/odisli
 #v Ccku chces mat istotu vsade inac hrozia rozne vulns/dos hrozby
 
