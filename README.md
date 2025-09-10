@@ -1,6 +1,7 @@
 #Flow projektu
 #TCP styl komunikacie potrebny nakolko potrebujeme mat istotu ze data prisli/odisli
 #v Ccku chces mat istotu vsade inac hrozia rozne vulns/dos hrozby
+
 #1. Senzory (sensors_src/)
 Každý súbor sensor_*.c simuluje jeden senzor (teplota, vlhkosť, tlak...).
 musi byt template_senzor z ktoreho budu "dedit" dalsie senzory,
