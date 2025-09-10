@@ -3,6 +3,7 @@
 #v Ccku chces mat istotu vsade inac hrozia rozne vulns/dos hrozby
 
 #1. Senzory (sensors_src/)
+
 Každý súbor sensor_*.c simuluje jeden senzor (teplota, vlhkosť, tlak...).
 musi byt template_senzor z ktoreho budu "dedit" dalsie senzory,
 template si vytvorte a bude obsahovat funkcie ktore budu
@@ -12,6 +13,7 @@ s realnym senzorom (cize data budu chodit z nejakeho endpointu)
 Kompiluje sa do modules/sensor_*.so. <- odtial si ich doska bude nacitavat
 
 #2. Board (doska)
+
 Načítava všetky .so senzory z modules/. (dynamic loading)
 Každý senzor sa volá raz za sekundu, hodnota sa uloží do kruhového bufferu (256 sekúnd).
 
@@ -26,17 +28,20 @@ Spracuje (min, max, avg, last).
 Poskytuje REST API /api/v1/summary. <- odporucam peknucky json nech web guy nemusi plakat
 
 #4. Web
+
 http server v C, basic errory handlovat, simplish auth v C staci s hard coded credentials
 Servuje HTML stránku + JS + CSS.
 JavaScript každé 2s fetchne dáta z processor apis a vykreslí tabuľku.
 
 #Rozdelenie úloh v tíme
+
 Osoba 1 – senzory: vytvoriť viaceré senzory podľa template_sensor.c (každý vlastný .c súbor).
 Osoba 2 – board: načítavanie .so senzorov (dlopen), kruhový buffer, REST API /sensors a /window.
 Osoba 3 – processor: fetch dát z boardu, výpočty (avg, min, max), REST API /summary.
 Osoba 4 – web: statické súbory (HTML, JS, CSS), jednoduchý HTTP server.
 
 #Resources
+
 https://octobot.medium.com/how-git-internally-works-1f0932067bee <= ako funguje git (OPTIONAL)
 https://www.learn-c.org/ <= bez aika vsetko tu su basics ktore obsahuju syntax snippets, ktore vam stacia
 https://tldp.org/HOWTO/Program-Library-HOWTO/dl-libraries.html <= jednoduche dl (dynamic loading)
@@ -45,12 +50,14 @@ https://www.json.org/json-en.html <= presne ako funguje json
 https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch <= simple fetch
 
 #Vysvetlenie pripon súborov
+
 .c – zdrojový kód v jazyku C (to co pises).
 .h – hlavičkový súbor, deklarácie funkcií/štruktúr, ktoré môžu používať iné .c.
 .so – shared object (zdieľaná knižnica, plugin). Kompiluje sa z .c cez -shared -fPIC.
 Board potom vie načítať každý sensor_*.so bez rekompilácie. (.so)
 
 #Datove typy
+
 | Typ        | Rozsah / význam                           |
 | ---------- | ----------------------------------------- |
 | `int`      | celé číslo (zvyčajne 32 bit)              |
@@ -65,6 +72,7 @@ Board potom vie načítať každý sensor_*.so bez rekompilácie. (.so)
 
 
 #Syntax cheatsheet
+
 // Premenná
 int x = 5;
 double t = 21.5;
